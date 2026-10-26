@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Debug Info</title>
+<link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+  <div class="warn-banner">
+    ⚠️ Situs ini SENGAJA dibuat rentan untuk bahan presentasi kelas. Jangan tiru pola kodenya di proyek sungguhan.
+  </div>
+  <div class="topbar">
+    <a class="brand" href="index.html">🛒 Warung Aman <span style="opacity:.6;font-weight:400">(demo)</span></a>
+    <nav>
+      <a href="index.html">Masuk</a>
+      <a href="reviews.html">Ulasan Produk</a>
+    </nav>
+  </div>
+
+  <div class="wrap">
+    <h1>Halaman debug</h1>
+    <p class="lead">Demo Security Misconfiguration — A02 OWASP Top 10</p>
+
+    <div class="card">
+      <p>Halaman ini seharusnya cuma dipakai developer saat pengembangan, lalu lupa dihapus
+      sebelum situs dirilis. Siapa pun yang tahu atau menebak alamatnya bisa membukanya langsung —
+      coba cek file <a href="robots.txt">robots.txt</a> situs ini, baris "Disallow" di sana malah
+      memberi tahu alamat halaman yang coba disembunyikan.</p>
+
+      <table>
+        <tr><th>Environment</th><td>production</td></tr>
+        <tr><th>Debug mode</th><td>ON</td></tr>
+        <tr><th>App version</th><td>0.9.2-beta</td></tr>
+        <tr><th>Admin default login</th><td>admin / S4ngatRahasia!</td></tr>
+        <tr><th>Database host (contoh)</th><td>db-internal.warungaman.local</td></tr>
+        <tr><th>API key pihak ketiga (contoh)</th><td>sk_live_4f9c...dummy...a812</td></tr>
+        <tr><th>Last error</th><td>TypeError at /checkout/process.js:118</td></tr>
+      </table>
+    </div>
+
+    <h2>Kenapa ini berbahaya?</h2>
+    <div class="card">
+      <p>Halaman debug seperti ini sering membocorkan info yang membantu penyerang: password
+      bawaan yang belum diganti, struktur server, versi software yang mungkin ada celahnya, sampai
+      pesan error teknis. Perbaikannya: matikan mode debug di production, hapus halaman semacam
+      ini sebelum rilis, dan jangan taruh alamat rahasia di robots.txt (robots.txt bersifat publik).</p>
+    </div>
+  </div>
+
+  <footer>Dibuat untuk tugas presentasi "Keamanan dan Privasi Web Modern" — Kelompok 9</footer>
+</body>
+</html>

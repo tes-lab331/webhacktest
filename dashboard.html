@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Warung Aman - Profil</title>
+<link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+  <div class="warn-banner">
+    ⚠️ Situs ini SENGAJA dibuat rentan untuk bahan presentasi kelas. Jangan tiru pola kodenya di proyek sungguhan.
+  </div>
+  <div class="topbar">
+    <a class="brand" href="index.html">🛒 Warung Aman <span style="opacity:.6;font-weight:400">(demo)</span></a>
+    <nav>
+      <a href="index.html">Masuk</a>
+      <a href="reviews.html">Ulasan Produk</a>
+    </nav>
+  </div>
+
+  <div class="wrap">
+    <h1>Profil saya</h1>
+    <p class="lead">Demo Broken Access Control (IDOR) — A01 OWASP Top 10</p>
+
+    <div class="card">
+      <div class="result breach" id="idorWarning" style="display:none;"></div>
+      <div id="profileBox">Memuat...</div>
+    </div>
+
+    <div class="hint">
+      Coba ini saat presentasi: login dulu (misalnya sebagai budi, id=2), lalu di address bar ganti
+      <code>?id=2</code> jadi <code>?id=1</code> atau <code>?id=3</code>. Data user lain — termasuk
+      saldo admin — ikut terlihat, padahal kamu tidak login sebagai mereka.
+    </div>
+
+    <h2>Kenapa ini bisa terjadi?</h2>
+    <div class="card">
+      <p>Halaman ini mengambil data langsung berdasarkan id di URL, tanpa mengecek ulang apakah id
+      tersebut memang milik pengguna yang sedang login. Perbaikannya: setiap permintaan data harus
+      diverifikasi di sisi server terhadap sesi login yang sah, bukan dipercaya begitu saja dari
+      input pengguna.</p>
+    </div>
+  </div>
+
+  <footer>Dibuat untuk tugas presentasi "Keamanan dan Privasi Web Modern" — Kelompok 9</footer>
+  <script src="js/data.js"></script>
+  <script src="js/dashboard.js"></script>
+  <script>loadProfile();</script>
+</body>
+</html>

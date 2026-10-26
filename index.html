@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Warung Aman - Masuk</title>
+<link rel="stylesheet" href="css/style.css">
+<!-- TODO: hapus halaman debug.html sebelum rilis ke production -->
+</head>
+<body>
+  <div class="warn-banner">
+    ⚠️ Situs ini SENGAJA dibuat rentan untuk bahan presentasi kelas. Jangan tiru pola kodenya di proyek sungguhan.
+  </div>
+  <div class="topbar">
+    <a class="brand" href="index.html">🛒 Warung Aman <span style="opacity:.6;font-weight:400">(demo)</span></a>
+    <nav>
+      <a href="index.html">Masuk</a>
+      <a href="reviews.html">Ulasan Produk</a>
+    </nav>
+  </div>
+
+  <div class="wrap">
+    <h1>Masuk ke akun</h1>
+    <p class="lead">Demo kerentanan web — Kelompok 9</p>
+
+    <div class="card">
+      <form id="loginForm" onsubmit="handleLogin(event)">
+        <label for="username">Username</label>
+        <input type="text" id="username" autocomplete="off" placeholder="budi">
+
+        <label for="password">Password</label>
+        <input type="text" id="password" autocomplete="off" placeholder="budi123">
+
+        <button type="submit">Masuk</button>
+      </form>
+
+      <div class="hint">
+        Login sah untuk dicoba dulu: <b>budi</b> / <b>budi123</b>.<br>
+        Lalu coba serangan: username <b>budi</b>, password <code>' OR '1'='1</code>
+      </div>
+
+      <div class="query-log" id="queryLog">-- query akan muncul di sini setelah kamu klik "Masuk" --</div>
+      <div id="loginResult"></div>
+    </div>
+
+    <h2>Tentang demo ini</h2>
+    <div class="card">
+      <p>Halaman ini meniru cara banyak aplikasi lama memeriksa login: menempelkan input pengguna
+      langsung ke dalam query, tanpa memisahkannya (bandingkan dengan <i>prepared statement</i>
+      yang dibahas di presentasi). Karena situs ini statis (GitHub Pages), tidak ada database
+      sungguhan — query di atas cuma ditampilkan dan dicek oleh JavaScript, supaya konsepnya tetap
+      bisa dipraktekkan tanpa server.</p>
+      <p>Setelah login, lanjutkan ke halaman <a href="dashboard.html">dashboard</a> untuk demo
+      <b>Broken Access Control (IDOR)</b>, atau ke halaman <a href="reviews.html">ulasan produk</a>
+      untuk demo <b>stored XSS</b>.</p>
+    </div>
+  </div>
+
+  <footer>Dibuat untuk tugas presentasi "Keamanan dan Privasi Web Modern" — Kelompok 9</footer>
+  <script src="js/data.js"></script>
+  <script src="js/login.js"></script>
+</body>
+</html>

@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Warung Aman - Ulasan Produk</title>
+<link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+  <div class="warn-banner">
+    ⚠️ Situs ini SENGAJA dibuat rentan untuk bahan presentasi kelas. Jangan tiru pola kodenya di proyek sungguhan.
+  </div>
+  <div class="topbar">
+    <a class="brand" href="index.html">🛒 Warung Aman <span style="opacity:.6;font-weight:400">(demo)</span></a>
+    <nav>
+      <a href="index.html">Masuk</a>
+      <a href="reviews.html">Ulasan Produk</a>
+    </nav>
+  </div>
+
+  <div class="wrap">
+    <h1>Kaos Polos Premium</h1>
+    <p class="lead">Demo Stored XSS — tulis ulasan, lihat apa yang terjadi</p>
+
+    <div class="card">
+      <form onsubmit="handleReviewSubmit(event)">
+        <label for="reviewerName">Nama</label>
+        <input type="text" id="reviewerName" placeholder="Nama kamu">
+
+        <label for="reviewText">Ulasan</label>
+        <textarea id="reviewText" placeholder="Tulis ulasan di sini..."></textarea>
+
+        <button type="submit">Kirim ulasan</button>
+        <button type="button" class="secondary" onclick="resetReviews()">Reset ulasan</button>
+      </form>
+
+      <div class="hint">
+        Coba kirim ulasan berisi: <code>&lt;script&gt;alert('Halaman ini kena XSS')&lt;/script&gt;</code><br>
+        atau yang lebih halus: <code>&lt;img src=x onerror="alert('XSS lewat gambar rusak')"&gt;</code>
+      </div>
+    </div>
+
+    <h2>Ulasan pembeli</h2>
+    <div class="card" id="reviewList"></div>
+
+    <h2>Kenapa ini bisa terjadi?</h2>
+    <div class="card">
+      <p>Ulasan yang kamu kirim disimpan apa adanya, lalu ditampilkan kembali sebagai HTML, bukan
+      sebagai teks biasa. Karena itu tag <code>&lt;script&gt;</code> atau atribut seperti
+      <code>onerror</code> ikut dijalankan browser. Di aplikasi sungguhan, ulasan ini akan
+      muncul ke SEMUA pengunjung yang membuka halaman produk — bukan cuma kamu — itulah kenapa
+      disebut "stored" (tersimpan).</p>
+    </div>
+  </div>
+
+  <footer>Dibuat untuk tugas presentasi "Keamanan dan Privasi Web Modern" — Kelompok 9</footer>
+  <script src="js/data.js"></script>
+  <script src="js/reviews.js"></script>
+  <script>renderReviews();</script>
+</body>
+</html>

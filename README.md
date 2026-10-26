@@ -42,6 +42,51 @@ Jangan dipakai sebagai contoh kode untuk proyek sungguhan, dan jangan isi dengan
   yang membuka halaman tersebut.
 - Kaitkan ke pencegahan: tampilkan input sebagai teks biasa (textContent), bukan HTML mentah.
 
+### 3a. Reflected XSS lewat URL — halaman Cari Produk (`search.html`), dari Termux
+Beda dengan demo di `reviews.html` (stored, lewat form), yang ini **reflected**: payload tidak
+disimpan, tapi langsung "dipantulkan" begitu link dibuka. Cocok didemokan dari Termux karena
+link-nya dibuat lewat terminal, bukan diketik di form.
+
+1. Di Termux, siapkan payload dan encode supaya aman dipakai di URL:
+   ```bash
+   PAYLOAD="<img src=x onerror=\"alert('XSS dari Termux!')\">"
+   ENC=$(python3 -c "import urllib.parse,sys;print(urllib.parse.quote(sys.argv[1]))" "$PAYLOAD")
+   URL="https://tes-lab331.github.io/webhacktest/search.html?q=$ENC"
+   echo "$URL"
+   ```
+2. **Penting soal curl**: situs ini statis (tidak ada server yang memproses `?q=`), jadi payload
+   baru "ditempel" ke halaman oleh JavaScript di browser, bukan oleh server. Artinya `curl "$URL"`
+   TIDAK akan menunjukkan payload di response — yang kelihatan cuma HTML aslinya. Ini disebut
+   **DOM-based XSS**. Kalau mau pakai curl untuk sesi recon, pakai untuk menunjukkan baris kode
+   rentannya langsung dari sumbernya:
+   ```bash
+   curl -s "https://tes-lab331.github.io/webhacktest/search.html" | grep -A2 "innerHTML"
+   ```
+   Baris itu yang membuktikan: nilai dari URL ditempel ke HTML tanpa dibersihkan dulu.
+3. Untuk benar-benar menjalankan XSS-nya (karena perlu browser, bukan cuma terminal), buka
+   `$URL` di Chrome HP, atau langsung dari Termux:
+   ```bash
+   termux-open-url "$URL"
+   ```
+   (butuh paket `termux-api` terpasang)
+4. Payload lengkap yang sekaligus auto-download `test.txt` dan redirect ke index (seperti demo
+   `xss-download.html`), tinggal di-encode dan dipakai dengan cara yang sama:
+   ```bash
+   PAYLOAD="<img src=x onerror=\"alert('XSS');var a=document.createElement('a');a.href='test.txt';a.download='test.txt';document.body.appendChild(a);a.click();setTimeout(()=>location.href='index.html',2500)\">"
+   ```
+- Kaitkan ke pencegahan: sama seperti stored XSS, tampilkan input sebagai teks biasa
+  (textContent), jangan pernah innerHTML dari data yang tidak tepercaya — termasuk dari URL.
+
+### 3b. XSS dengan Auto-Download — halaman Demo XSS (`xss-download.html`)
+- Klik link "Demo XSS + Download" di navbar.
+- Halaman ini menjalankan XSS payload otomatis:
+  - Alert pop-up menunjukkan XSS berhasil berjalan.
+  - File `test.txt` otomatis terunduh ke folder Downloads.
+  - Halaman redirect balik ke index dalam 3 detik.
+- Tunjukkan ke penonton bahwa file yang diunduh itu teks biasa (tidak HTML), tapi tetap di-trigger
+  dari halaman yang rentan XSS — ini simulasi bagaimana attacker bisa manipulasi download tanpa
+  persetujuan pengguna.
+
 ### 4. Security Misconfiguration — halaman Debug (`debug.html`)
 - Tunjukkan file `robots.txt` situs ini — baris `Disallow: /debug.html` justru membocorkan
   alamat halaman yang coba disembunyikan.

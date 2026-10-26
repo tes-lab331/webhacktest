@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Warung Aman - Cari Produk</title>
+<link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+  <div class="warn-banner">
+    ⚠️ Situs ini SENGAJA dibuat rentan untuk bahan presentasi kelas. Jangan tiru pola kodenya di proyek sungguhan.
+  </div>
+  <div class="topbar">
+    <a class="brand" href="index.html">🛒 Warung Aman <span style="opacity:.6;font-weight:400">(demo)</span></a>
+    <nav>
+      <a href="index.html">Masuk</a>
+      <a href="reviews.html">Ulasan Produk</a>
+      <a href="search.html">Cari Produk</a>
+      <a href="xss-download.html" style="color:#ff6b6b;">Demo XSS + Download</a>
+    </nav>
+  </div>
+
+  <div class="wrap">
+    <h1>Cari produk</h1>
+    <p class="lead">Demo Reflected XSS — lewat parameter URL (?q=...)</p>
+
+    <div class="card">
+      <form onsubmit="doSearch(event)">
+        <label for="q">Kata kunci</label>
+        <input type="text" id="q" placeholder="misalnya: kaos">
+        <button type="submit">Cari</button>
+      </form>
+
+      <div class="hint">
+        Coba buka URL ini langsung (bisa dibuat dari Termux):<br>
+        <code>search.html?q=&lt;img src=x onerror=alert('XSS')&gt;</code>
+      </div>
+
+      <div class="card" id="resultBox" style="margin-top:14px;"></div>
+    </div>
+
+    <h2>Kenapa ini bisa terjadi?</h2>
+    <div class="card">
+      <p>Halaman ini mengambil nilai parameter <code>q</code> langsung dari URL, lalu menampilkannya
+      ke halaman sebagai HTML mentah (bukan teks biasa). Karena isinya datang dari URL — bukan dari
+      database — ini disebut <b>reflected XSS</b>: payload tidak tersimpan, tapi langsung "dipantulkan"
+      ke korban begitu link-nya dibuka. Biasanya disebar lewat link yang kelihatan tidak mencurigakan
+      (dipendekkan, atau disisipkan parameter tersembunyi).</p>
+      <p>Perbaikan sebenarnya: tampilkan nilai <code>q</code> sebagai teks biasa (textContent), dan
+      jangan pernah memasukkan input dari URL langsung ke dalam HTML.</p>
+    </div>
+  </div>
+
+  <footer>Dibuat untuk tugas presentasi "Keamanan dan Privasi Web Modern" — Kelompok 9</footer>
+
+  <script>
+    // VULNERABLE (REFLECTED XSS): nilai dari URL (?q=...) ditempel langsung
+    // ke innerHTML tanpa dibersihkan/di-escape dulu. Kalau nilainya berupa
+    // tag dengan event handler (misalnya <img onerror=...>), browser akan
+    // menjalankannya begitu halaman ini dibuka -- siapa pun yang mengklik
+    // link ini jadi korban, bukan cuma yang membuat link-nya.
+    function renderFromURL() {
+      const params = new URLSearchParams(window.location.search);
+      const q = params.get("q");
+      const box = document.getElementById("resultBox");
+      if (!q) {
+        box.innerHTML = "<p style='color:#8a90ab'>Belum ada pencarian. Coba cari sesuatu di atas, atau buka link dengan ?q=... di belakangnya.</p>";
+        return;
+      }
+      document.getElementById("q").value = q;
+      // VULNERABLE: harusnya pakai textContent, bukan innerHTML
+      box.innerHTML = `<p>Hasil pencarian untuk: <b>${q}</b></p><p style="color:#8a90ab">Tidak ada produk ditemukan.</p>`;
+    }
+
+    function doSearch(event) {
+      event.preventDefault();
+      const q = document.getElementById("q").value;
+      window.location.href = "search.html?q=" + encodeURIComponent(q);
+    }
+
+    renderFromURL();
+  </script>
+</body>
+</html>
